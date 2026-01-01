@@ -417,6 +417,7 @@
         "export message2": "要將盒子中的寶可夢轉移到另一個環境，請在目標環境中導入以下數據。",
         "export notice": "建議定期導出盒子中的寶可夢數據。",
         "box data": "盒子詳情",
+        "save to file": "儲存到文件",
         "copy to clipboard": "複製到剪貼簿",
         "copied to clipboard": "已複製到剪貼簿。",
         "import message": "貼上導出的數據並按[導入]按鈕。",

@@ -1,6 +1,7 @@
 import React from 'react';
 import PokemonBox from '../../../util/PokemonBox';
 import { copyToClipboard } from '../../../util/Clipboard';
+import { downloadAsTextFile } from '../../../util/File';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar,
     TextField }  from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -16,11 +17,16 @@ const BoxExportDialog = React.memo(({box, open, onClose}: {
         .map(x => x.serialize())
         .join("\n");
 
+    const onSave = React.useCallback(() => {
+        downloadAsTextFile(value,"pokesleep-tool-iv-box.txt")
+    }, [value]);
+
     const onCopy = React.useCallback(() => {
         copyToClipboard(value).then(() => {
             setCopiedMessageVisible(true);
         }).catch(() => {});
     }, [setCopiedMessageVisible, value]);
+
     const onCopiedMessageClose = React.useCallback(() => {
         setCopiedMessageVisible(false);
     }, [setCopiedMessageVisible]);
@@ -34,6 +40,7 @@ const BoxExportDialog = React.memo(({box, open, onClose}: {
                 multiline fullWidth rows={6} defaultValue={value}/>
         </DialogContent>
         <DialogActions>
+            <Button onClick={onSave}>{t('save to file')}</Button>
             <Button onClick={onCopy}>{t('copy to clipboard')}</Button>
             <Button onClick={onClose}>{t('close')}</Button>
         </DialogActions>

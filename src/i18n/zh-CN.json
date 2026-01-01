@@ -415,6 +415,7 @@
         "export message2": "要将盒子中的宝可梦转移到另一个环境，请在目标环境中导入以下数据。",
         "export notice": "建议定期导出盒子中的宝可梦数据。",
         "box data": "盒子详情",
+        "save to file": "保存到文件",
         "copy to clipboard": "复制到剪贴板",
         "copied to clipboard": "已复制到剪贴板。",
         "import message": "粘贴导出的数据并按 [导入] 按钮。",

@@ -427,6 +427,7 @@
         "export message2": "To transfer the Pokémon in the box to another environment, please import the following data into the target environment.",
         "export notice": "It is recommended to periodically export the Pokémon data in the box.",
         "box data": "Box Information",
+        "save to file": "Save to file",
         "copy to clipboard": "Copy to clipboard",
         "copied to clipboard": "Copied to clipboard.",
         "import message": "Paste the exported data and press the [Import] button.",

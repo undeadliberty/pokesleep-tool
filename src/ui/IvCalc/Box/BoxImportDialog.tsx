@@ -1,5 +1,6 @@
 import React from 'react';
 import PokemonBox from '../../../util/PokemonBox';
+import { readFileAsText } from '../../../util/File';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar,
     TextField }  from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -12,6 +13,20 @@ const BoxImportDialog = React.memo(({box, open, onClose}: {
     const [value, setValue] = React.useState("");
     const [importedMessage, setImportedMessage] = React.useState("");
     const { t } = useTranslation();
+
+
+    const onDrop = React.useCallback(async (e: React.DragEvent<HTMLDivElement>) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        setValue(await readFileAsText(file));
+    },[setValue]);
+
+    const onFileChange = React.useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        setValue(await readFileAsText(file));
+    }, [setValue]);
 
     const onValueChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         setValue(e.target.value);
@@ -57,9 +72,13 @@ const BoxImportDialog = React.memo(({box, open, onClose}: {
         <Dialog open={open} onClose={onClose_}>
             <DialogTitle>{t('import')}</DialogTitle>
             <DialogContent>
-                <p style={{fontSize: '0.9rem', margin: '0 0 1rem 0'}}>{t('import message')}</p>
+                <p style={{fontSize: '0.9rem', margin: '0 0 1rem 0'}}>
+                    {t('import message')}
+                    <input type="file" onChange={onFileChange}></input>
+                </p>
                 <TextField label={t('box data')}
-                    multiline fullWidth rows={6} value={value} onChange={onValueChange}/>
+                    multiline fullWidth rows={6} value={value} onChange={onValueChange}
+                    onDragOver={e => e.preventDefault()} onDrop={onDrop}/>
             </DialogContent>
             <DialogActions>
                 <Button onClick={onImportClick}>{t('import')}</Button>
