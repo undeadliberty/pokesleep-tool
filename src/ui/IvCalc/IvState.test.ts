@@ -5,12 +5,13 @@ import { normalizeState, ivStateReducer } from './IvState';
 import type IvState from './IvState';
 import type { IvAction } from './IvState';
 import { loadStrengthParameter } from '../../util/PokemonStrength';
+import i18n from '../../i18n';
 
 function createBaseState(): IvState {
     return {
         tabIndex: 0,
         lowerTabIndex: 0,
-        pokemonIv: new PokemonIv('Venusaur'),
+        pokemonIv: new PokemonIv({ pokemonName: 'Venusaur' }),
         parameter: loadStrengthParameter(),
         box: new PokemonBox(),
         selectedItemId: -1,
@@ -32,8 +33,10 @@ describe('normalizeState', () => {
 
     describe('PokemonIv normalization', () => {
         test('should call normalize on the PokemonIv', () => {
-            const iv = new PokemonIv('Pikachu');
-            iv.skillLevel = 0;
+            const iv = new PokemonIv({
+                pokemonName: 'Pikachu',
+                skillLevel: 0,
+            });
             const state = { ...baseState, pokemonIv: iv };
             const newState = normalizeState(state);
 
@@ -48,7 +51,7 @@ describe('normalizeState', () => {
             state.parameter.event = 'halloween 2024';
             state.parameter.fieldIndex = 0;
             state.parameter.favoriteType = ['normal', 'bug', 'rock'];
-            state.pokemonIv = new PokemonIv('Venusaur');
+            state.pokemonIv = new PokemonIv({ pokemonName: 'Venusaur' });
 
             const newState = normalizeState(state);
 
@@ -63,7 +66,7 @@ describe('normalizeState', () => {
             state.parameter.event = 'halloween2024';
             state.parameter.fieldIndex = 1;
             state.parameter.favoriteType = ['normal', 'normal', 'normal'];
-            state.pokemonIv = new PokemonIv('Venusaur');
+            state.pokemonIv = new PokemonIv({ pokemonName: 'Venusaur' });
 
             const newState = normalizeState(state);
 
@@ -76,7 +79,7 @@ describe('normalizeState', () => {
             state.parameter.event = 'raikou entei suicune research 1st week';
             state.parameter.fieldIndex = 0;
             state.parameter.favoriteType = ['normal', 'normal', 'normal'];
-            state.pokemonIv = new PokemonIv('Venusaur');
+            state.pokemonIv = new PokemonIv({ pokemonName: 'Venusaur' });
 
             const newState = normalizeState(state);
 
@@ -91,7 +94,7 @@ describe('normalizeState', () => {
         test('should count up species from 1 to 2 for Lunar Blessing Pokemon', () => {
             const state = { ...baseState };
             // Cresselia has "Energy for Everyone S (Lunar Blessing)" skill
-            state.pokemonIv = new PokemonIv('Cresselia');
+            state.pokemonIv = new PokemonIv({ pokemonName: 'Cresselia' });
             state.parameter.berryBurstTeam.auto = false;
             state.parameter.berryBurstTeam.members = [
                 { type: 'psychic', level: 50 },
@@ -109,7 +112,7 @@ describe('normalizeState', () => {
 
         test('should use min when species count > 2', () => {
             const state = { ...baseState };
-            state.pokemonIv = new PokemonIv('Cresselia'); // psychic type
+            state.pokemonIv = new PokemonIv({ pokemonName: 'Cresselia' }); // psychic type
             state.parameter.berryBurstTeam.auto = false;
             state.parameter.berryBurstTeam.members = [
                 { type: 'psychic', level: 50 },
@@ -127,7 +130,7 @@ describe('normalizeState', () => {
 
     describe('State immutability', () => {
         test('should return new state object', () => {
-            const iv = new PokemonIv('Pikachu');
+            const iv = new PokemonIv({ pokemonName: 'Pikachu' });
             const state = { ...baseState, pokemonIv: iv };
             const newState = normalizeState(state);
 
@@ -135,7 +138,7 @@ describe('normalizeState', () => {
         });
 
         test('should update pokemonIv reference', () => {
-            const iv = new PokemonIv('Pikachu');
+            const iv = new PokemonIv({ pokemonName: 'Pikachu' });
             const state = { ...baseState, pokemonIv: iv };
             const newState = normalizeState(state);
 
@@ -153,7 +156,7 @@ describe('ivStateReducer', () => {
     describe('changeParameter action', () => {
         test('should normalize PokemonIv when parameter changes', () => {
             const state = { ...baseState };
-            state.pokemonIv.skillLevel = 0; // Invalid skill level
+            state.pokemonIv = state.pokemonIv.clone({ skillLevel: 0 }); // Invalid skill level
 
             const newParameter = loadStrengthParameter();
             const action: IvAction = {
@@ -170,8 +173,10 @@ describe('ivStateReducer', () => {
 
     describe('updateIv action', () => {
         test('should normalize state when IV is updated', () => {
-            const newIv = new PokemonIv('Pikachu');
-            newIv.skillLevel = 0; // Invalid skill level
+            const newIv = new PokemonIv({
+                pokemonName: 'Pikachu',
+                skillLevel: 0, // Invalid skill level
+            });
 
             const action: IvAction = {
                 type: 'updateIv',
@@ -189,12 +194,16 @@ describe('ivStateReducer', () => {
     describe('restoreItem action', () => {
         test('should restore item change', () => {
             const box = new PokemonBox();
-            const iv = new PokemonIv('Venusaur');
-            iv.skillLevel = 1;
+            const iv = new PokemonIv({
+                pokemonName: 'Venusaur',
+                skillLevel: 1,
+            });
             const itemId = box.add(iv);
 
-            const pokemonIv = new PokemonIv('Venusaur');
-            pokemonIv.skillLevel = 3;
+            const pokemonIv = new PokemonIv({
+                pokemonName: 'Venusaur',
+                skillLevel: 3,
+            });
 
             const state = { ...baseState, box, pokemonIv, selectedItemId: itemId };
             const action: IvAction = {
@@ -221,8 +230,10 @@ describe('ivStateReducer', () => {
 
     describe('addOrEditDone action', () => {
         test('should normalize state when adding new item', () => {
-            const iv = new PokemonIv('Blastoise');
-            iv.skillLevel = 0; // Will be normalized
+            const iv = new PokemonIv({
+                pokemonName: 'Blastoise',
+                skillLevel: 0, // Will be normalized
+            });
 
             const item = new PokemonBoxItem(iv, 'MyBlastoise', -1);
 
@@ -241,13 +252,15 @@ describe('ivStateReducer', () => {
 
         test('should normalize state when editing existing item', () => {
             const box = new PokemonBox();
-            const originalIv = new PokemonIv('Raichu');
+            const originalIv = new PokemonIv({ pokemonName: 'Raichu' });
             const itemId = box.add(originalIv);
 
             const state = { ...baseState, box, selectedItemId: itemId };
 
-            const editedIv = new PokemonIv('Pikachu');
-            editedIv.skillLevel = 0; // Will be normalized
+            const editedIv = new PokemonIv({
+                pokemonName: 'Pikachu',
+                skillLevel: 0, // Will be normalized
+            });
 
             const item = new PokemonBoxItem(editedIv, 'EditedPikachu', itemId);
 
@@ -267,8 +280,10 @@ describe('ivStateReducer', () => {
     describe('select action', () => {
         test('should normalize state when selecting item from box', () => {
             const box = new PokemonBox();
-            const iv = new PokemonIv('Raichu');
-            iv.skillLevel = 0; // Will be normalized
+            const iv = new PokemonIv({
+                pokemonName: 'Raichu',
+                skillLevel: 0, // Will be normalized
+            });
             const itemId = box.add(iv);
 
             const state = { ...baseState, box };
@@ -295,6 +310,95 @@ describe('ivStateReducer', () => {
             const newState = ivStateReducer(baseState, action);
 
             expect(newState).toBe(baseState);
+        });
+    });
+
+    describe('saveItem action', () => {
+        test('should update selected item in box with current pokemonIv', () => {
+            const box = new PokemonBox();
+            const originalIv = new PokemonIv({
+                pokemonName: 'Pikachu',
+                level: 25,
+            });
+            const itemId = box.add(originalIv, 'MyPikachu');
+
+            const updatedIv = new PokemonIv({
+                pokemonName: 'Pikachu',
+                level: 50,
+            });
+
+            const state = { ...baseState, box, pokemonIv: updatedIv, selectedItemId: itemId };
+            const action: IvAction = {type: 'saveItem'};
+            const newState = ivStateReducer(state, action);
+
+            // The item in the box should be updated
+            const savedItem = newState.box.getById(itemId);
+            expect(savedItem).not.toBeNull();
+            expect(savedItem!.iv.level).toBe(50);
+            expect(savedItem!.nickname).toBe('MyPikachu');
+
+            // Should create new instance
+            expect(newState.box).not.toBe(state.box);
+        });
+
+        test('should handle item without nickname', () => {
+            const box = new PokemonBox();
+            const originalIv = new PokemonIv({ pokemonName: 'Venusaur' });
+            const itemId = box.add(originalIv); // No nickname
+
+            const updatedIv = new PokemonIv({
+                pokemonName: 'Venusaur',
+                level: 100,
+            });
+
+            const state = { ...baseState, box, pokemonIv: updatedIv, selectedItemId: itemId };
+            const action: IvAction = {type: 'saveItem'};
+            const newState = ivStateReducer(state, action);
+
+            const savedItem = newState.box.getById(itemId);
+            expect(savedItem).not.toBeNull();
+            expect(savedItem!.iv.level).toBe(100);
+            expect(savedItem!.nickname).toBe('');
+        });
+
+        test('should clear nickname when it matches Pokemon name in English', async () => {
+            await i18n.changeLanguage("en");
+            const box = new PokemonBox();
+            const originalIv = new PokemonIv({ pokemonName: 'Pikachu' });
+            const itemId = box.add(originalIv, 'Pikachu');
+
+            const updatedIv = new PokemonIv({
+                pokemonName: 'Pikachu',
+                level: 50,
+            });
+
+            const state = { ...baseState, box, pokemonIv: updatedIv, selectedItemId: itemId };
+            const action: IvAction = {type: 'saveItem'};
+            const newState = ivStateReducer(state, action);
+
+            const savedItem = newState.box.getById(itemId);
+            expect(savedItem!.iv.level).toBe(50);
+            expect(savedItem!.nickname).toBe('');
+        });
+
+        test('should clear nickname when it matches Pokemon name in Japanese', async () => {
+            await i18n.changeLanguage("ja");
+            const box = new PokemonBox();
+            const originalIv = new PokemonIv({ pokemonName: 'Pikachu' });
+            const itemId = box.add(originalIv, 'ピカチュウ');
+
+            const updatedIv = new PokemonIv({
+                pokemonName: 'Pikachu',
+                level: 50,
+            });
+
+            const state = { ...baseState, box, pokemonIv: updatedIv, selectedItemId: itemId };
+            const action: IvAction = {type: 'saveItem'};
+            const newState = ivStateReducer(state, action);
+
+            const savedItem = newState.box.getById(itemId);
+            expect(savedItem!.iv.level).toBe(50);
+            expect(savedItem!.nickname).toBe('');
         });
     });
 });

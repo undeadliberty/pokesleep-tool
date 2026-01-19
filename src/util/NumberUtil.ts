@@ -3,25 +3,34 @@ import i18next from 'i18next'
 export function round1(n: number) {
     n = Math.round(n * 10);
     const f = (n % 10).toString();
-    const d = formatWithComma(n / 10);
+    const d = formatWithComma(Math.floor(n / 10));
     return `${d}.${f}`;
 }
 
 export function round2(n: number) {
     n = Math.round(n * 100);
     const f = (n % 100).toString().padStart(2, "0");
-    const d = formatWithComma(n / 100);
+    const d = formatWithComma(Math.floor(n / 100));
     return `${d}.${f}`;
 }
 
 export function round3(n: number) {
     n = Math.round(n * 1000);
     const f = (n % 1000).toString().padStart(3, "0");
-    const d = formatWithComma(n / 1000);
+    const d = formatWithComma(Math.floor(n / 1000));
     return `${d}.${f}`;
 }
 
 export function formatWithComma(n: number): string {
+    if (!Number.isInteger(n)) {
+        if (n < 1) {
+            return n.toFixed(2);
+        }
+        if (n < 10) {
+            return n.toFixed(1);
+        }
+    }
+
     const parts: string[] = [];
     n = Math.floor(n);
     while (n >= 1000) {
@@ -78,4 +87,10 @@ export function formatNice(n: number, t: typeof i18next.t): string {
 
 export function clamp(min: number, value: number, max: number): number {
     return Math.min(Math.max(value, min), max);
+}
+
+export function trunc(v: number, n: number): number {
+    const N = Math.pow(10, n);
+    const d = parseFloat((v * N).toFixed(6));
+    return Math.floor(d) / N;
 }

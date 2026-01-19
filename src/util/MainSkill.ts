@@ -18,6 +18,7 @@ export type MainSkillName = "Ingredient Magnet S" |
     "Metronome" |
     "Energy for Everyone S" |
     "Energy for Everyone S (Lunar Blessing)" |
+    "Energy for Everyone S (Berry Juice)" |
     "Extra Helpful S" |
     "Cooking Power-Up S" |
     "Cooking Power-Up S (Minus)" |
@@ -44,7 +45,7 @@ export const MainSkillNames: MainSkillName[] = [
 ];
 
 /** Candy probability for Present */
-export const presentCandyRate = 0.5;
+export const presentCandyRate = 0.344;
 
 /**
  * Ingredient proberbility for Super Luck
@@ -157,6 +158,9 @@ export function getSkillValue(skill: MainSkillName, skillLevel: number,
     }
     if (skill === "Energy for Everyone S (Lunar Blessing)") {
         return [3, 4, 5, 7, 9, 11][skillLevel - 1];
+    }
+    if (skill === "Energy for Everyone S (Berry Juice)") {
+        return [5, 7, 9, 11, 15, 18][skillLevel - 1];
     }
     if (skill === "Extra Helpful S") {
         return [6, 7, 8, 9, 10, 11, 12][skillLevel - 1];

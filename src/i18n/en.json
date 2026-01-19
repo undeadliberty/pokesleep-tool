@@ -15,6 +15,14 @@
             "notice detail1": "Let's check the future RP and Strength of the Pokémon.",
             "notice detail2": "Please check our tutorial videos on our <YouTube>YouTube channel</YouTube>.",
             "news": {
+                "add shuckle": {
+                    "headline": "Added data for $t(pokemons.Shuckle).",
+                    "detail": "$t(rp collection)"
+                },
+                "clodsire bug": {
+                    "headline": "$t(pokemons.Clodsire) may have escaped from [$t(box)]. Please check.",
+                    "detail": "If you opened the tool between January 7-9, $t(pokemons.Clodsire) data may have disappeared from the box. We sincerely apologize for the inconvenience."
+                },
                 "candy movie": {
                     "headline": "<a href='https://youtu.be/-1I4s8jwiUs'>Video tutorial for candy calculation feature</a> has been published.",
                     "detail": "$t(movie detail)"
@@ -408,7 +416,7 @@
         "rp formula doc title": "RP Model Breakdown",
         "estimated beyond level": "The value beyond level {{level}} is estimated.",
         "estimated value": "Estimated",
-        "ratio is not fixed": "The ingredient% and skill% for this Pokémon are not yet confirmed, so provisional values are displayed.",
+        "rate is not fixed": "The ingredient% and skill% for this Pokémon are not yet confirmed, so provisional values are displayed.",
 
         "box": "Box",
         "parameter": "Parameter",
@@ -476,6 +484,7 @@
             "none": "None",
             "advanced": "Advanced",
             "custom": "Custom",
+            "super skill week part 3": "$t(events.super skill week) Part 3",
             "new year 2026 2nd week": "New Year 2026 (2nd week)",
             "new year 2026 1st week": "New Year 2026 (1st week)",
             "holiday 2025": "Holiday 2025",
@@ -537,7 +546,6 @@
         "lottery count": "Lottery count",
         "always 81%+": "Always 81%+",
         "charge energy not implemented": "Currently, energy recovery via Charge Energy S is not included in the calculations.",
-        "present assumption": "Calculations assume a 50% probability of obtaining candy. ",
 
         "help yield": "Yield",
         "help yield description": "The average number of berries and ingredients collected over {{n}} helps.",
@@ -633,7 +641,7 @@
         "strength skill info": {
             "Ingredient Magnet S": "Ingredients from the skill are assumed to be surplus.",
             "Ingredient Magnet S (Plus)": "$t(strength skill info.Ingredient Magnet S) The additional ingredients will be obtainedr when there's one or more Pokémon on the team with the Plus or Minus main skill.",
-            "Ingredient Magnet S (Present)": "$t(strength skill info.Ingredient Magnet S)",
+            "Ingredient Magnet S (Present)": "$t(strength skill info.Ingredient Magnet S) The candy acquisition rate is based on RaenonX's data (34.4%).",
             "Charge Energy S": "This value is not counted towards the total strength amount. To estimate the impact on the strength amount, change the value of [$t(energy)].",
             "Charge Energy S (Moonlight)": "$t(strength skill info.Charge Energy S)",
             "Charge Strength S": "",
@@ -646,6 +654,7 @@
             "Metronome": "$t(strength skill info.Skill Copy)",
             "Energy for Everyone S": "To estimate the impact on the strength amount, change the value of [$t(energy)].",
             "Energy for Everyone S (Lunar Blessing)": "$t(strength skill info.Energy for Everyone S)",
+            "Energy for Everyone S (Berry Juice)": "$t(strength skill info.Energy for Everyone S)",
             "Extra Helpful S": "Displays the number of usual help you get by the skill. The impact on the total strength amount is estimated at 300 per usual help (without area bonuses).",
             "Cooking Power-Up S": "",
             "Cooking Power-Up S (Minus)": "Restores Energy to one random Pokémon on your team, but only if at least one teammate has the Plus or Minus main skill.",
@@ -715,6 +724,7 @@
             "Metronome": "Metronome",
             "Energy for Everyone S": "Energy for Everyone S",
             "Energy for Everyone S (Lunar Blessing)": "Lunar Blessing (Energy for Everyone S)",
+            "Energy for Everyone S (Berry Juice)": "Berry Juice (Energy for Everyone S)",
             "Extra Helpful S": "Extra Helpful S",
             "Cooking Power-Up S": "Cooking Power-Up S",
             "Cooking Power-Up S (Minus)": "Minus (Cooking Power-Up S)",
@@ -937,6 +947,7 @@
             "Delibird": "Delibird",
             "Houndour": "Houndour",
             "Houndoom": "Houndoom",
+            "Shuckle": "Shuckle",
             "Blissey": "Blissey",
             "Raikou": "Raikou",
             "Entei": "Entei",

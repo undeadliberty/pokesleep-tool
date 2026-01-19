@@ -276,7 +276,7 @@ const StrengthBerryIngSkillStrengthView = React.memo(({
                 </div>
             </article>
             <footer>
-                <div>{round1(result.berryRatio * 100)}%</div>
+                <div>{round1(result.berryRate * 100)}%</div>
                 <div>{round1(result.berryHelpCount)}{t('times unit')}</div>
             </footer>
         </section>
@@ -286,7 +286,7 @@ const StrengthBerryIngSkillStrengthView = React.memo(({
             </h3>
             {ingArticle}
             <footer>
-                <div>{round1(result.ingRatio * 100)}%</div>
+                <div>{round1(result.ingRate * 100)}%</div>
                 <div>{round1(result.ingHelpCount)}{t('times unit')}</div>
             </footer>
         </section>
@@ -296,7 +296,7 @@ const StrengthBerryIngSkillStrengthView = React.memo(({
             </h3>
             {mainSkillArticle}
             <footer>
-                <div>{round1(result.skillRatio * 100)}%</div>
+                <div>{round1(result.skillRate * 100)}%</div>
                 <div>{round2(result.skillCount)}{t('times unit')}</div>
             </footer>
         </section>
@@ -329,20 +329,6 @@ const StrengthBerryIngSkillStrengthView = React.memo(({
             <span>{t('required helper boost')}: {round1(getRequiredHelperBoost(settings, strength, result))}</span>
             <InfoButton onClick={onStockInfoClick}/>
         </footer>}
-        {strength.pokemonIv.pokemon.skill === 'Ingredient Magnet S (Present)' &&
-            <div style={{
-                gridColumn: '1 / -1',
-                border: '1px solid red',
-                background: '#ffeeee',
-                color: 'red',
-                fontSize: '0.8rem',
-                borderRadius: '0.5rem',
-                margin: '.2rem .5rem 0',
-                padding: '0 0.3rem',
-            }}>
-                {t('present assumption')}
-            </div>
-        }
         <BerryHelpDialog open={berryHelpOpen} onClose={onBerryHelpClose}
             strength={strength} result={result}/>
         <IngHelpDialog open={ingHelpOpen} onClose={onIngHelpClose}
@@ -386,7 +372,9 @@ function getMainSkillArticle(pokemonIv: PokemonIv, result: StrengthResult,
 
     const mainSkill = pokemonIv.pokemon.skill;
     const mainSkillValue: string = formatNice(result.skillValue, t);
-    const mainSkillValue2: string = result.skillValue2 === 0 ? "" :
+    const mainSkillValue2: string =
+        //mainSkill === "Energy for Everyone S (Berry Juice)" ? "0.00" :
+        result.skillValue2 === 0 ? "" :
         formatNice(result.skillValue2, t);
 
     const skill1 = <div>

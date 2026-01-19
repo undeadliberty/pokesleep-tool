@@ -15,6 +15,14 @@
             "notice detail1": "用來確認将来的 SP 和能量、有助於制定養成計劃！",
             "notice detail2": "此外，我們在 <YouTube>YouTube 頻道</YouTube> 上發佈了使用方法的講解影片。請務必觀看。",
             "news": {
+                "add shuckle": {
+                    "headline": "新增了$t(pokemons.Shuckle)的資料。",
+                    "detail": "$t(rp collection)"
+                },
+                "clodsire bug": {
+                    "headline": "$t(pokemons.Clodsire)可能從[$t(box)]中逃走了，請您確認。",
+                    "detail": "如果您在1月7日至9日期間首次打開工具，盒子中的$t(pokemons.Clodsire)資料可能已消失。對此造成的不便深表歉意。"
+                },
                 "candy movie": {
                     "headline": "<a href='https://youtu.be/-1I4s8jwiUs'>糖果計算功能的使用方法影片</a>已發佈。",
                     "detail": "$t(movie detail)"
@@ -398,7 +406,7 @@
         "rp formula doc title": "SP計算模型的解説",
         "estimated beyond level": "級別 {{level}} 以後的值是估算值。",
         "estimated value": "推測値",
-        "ratio is not fixed": "該寶可夢的食材機率和技能確率尚未確定，因此顯示的是臨時值。",
+        "rate is not fixed": "該寶可夢的食材機率和技能確率尚未確定，因此顯示的是臨時值。",
 
         "box": "盒子",
         "parameter": "參數",
@@ -466,6 +474,7 @@
             "none": "無",
             "advanced": "詳細設定",
             "custom": "自訂設定",
+            "super skill week part 3": "$t(events.super skill week)vol.3",
             "new year 2026 2nd week": "新年2026 (第2週)",
             "new year 2026 1st week": "新年2026 (第1週)",
             "holiday 2025": "佳節2025",
@@ -527,7 +536,6 @@
         "lottery count": "抽選次數",
         "always 81%+": "始終超過81%",
         "charge energy not implemented": "目前不考慮活力填充 S 帶來的活力回復。",
-        "present assumption": "計算時假設獲取$t(candy)的機率為50%。",
 
         "help yield": "$t(berry)$t(ingredient)數量",
         "help yield description": "每$t(help count)次可獲得的$t(berry)和$t(ingredient)的平均數量。",
@@ -622,7 +630,7 @@
         "strength skill info": {
             "Ingredient Magnet S": "通過技能獲取的食材假定作為剩餘食材進行計算。",
             "Ingredient Magnet S (Plus)": "$t(strength skill info.Ingredient Magnet S)不會考慮隊伍中是否有除了自己以外擁有「正電」或「負電」特性的寶可夢。",
-            "Ingredient Magnet S (Present)": "$t(strength skill info.Ingredient Magnet S)",
+            "Ingredient Magnet S (Present)": "$t(strength skill info.Ingredient Magnet S)根據 RaenonX 的彙總數據計算，獲取 $t(candy) 的機率為 34.4%。",
             "Charge Energy S": "技能的效果沒有換算成合計能量值。如需估計對能量的影響，請嘗試變更 [$t(energy)] 的值並進行確認。",
             "Charge Energy S (Moonlight)": "$t(strength skill info.Charge Energy S)",
             "Charge Strength S": "",
@@ -635,6 +643,7 @@
             "Metronome": "$t(strength skill info.Skill Copy)",
             "Energy for Everyone S": "如需估計對能量的影響，請嘗試變更 [$t(energy)] 的值並進行確認。",
             "Energy for Everyone S (Lunar Blessing)": "$t(strength skill info.Energy for Everyone S)",
+            "Energy for Everyone S (Berry Juice)": "$t(strength skill info.Energy for Everyone S)",
             "Extra Helpful S": "顯示技能發動帶來的 [幫助次數] 。能量總量以每次幫助 300（不含營地獎勵）進行計算。",
             "Cooking Power-Up S": "",
             "Cooking Power-Up S (Minus)": "只有當隊伍中有至少一隻擁有「正電」或「負電」主技能的寶可夢時，才會回復一隻隊伍成員的活力。",
@@ -704,6 +713,7 @@
             "Metronome": "揮指",
             "Energy for Everyone S": "活力全體療癒S",
             "Energy for Everyone S (Lunar Blessing)": "新月祈禱 (活力全體療癒S)",
+            "Energy for Everyone S (Berry Juice)": "樹果汁 (活力全體療癒S)",
             "Extra Helpful S": "幫手支援S",
             "Cooking Power-Up S": "料理强化S",
             "Cooking Power-Up S (Minus)": "负电 (料理强化S)",
@@ -926,6 +936,7 @@
             "Delibird": "信使鳥",
             "Houndour": "戴魯比",
             "Houndoom": "黑魯加",
+            "Shuckle": "壺壺",
             "Blissey": "幸福蛋",
             "Raikou": "雷公",
             "Entei": "炎帝",

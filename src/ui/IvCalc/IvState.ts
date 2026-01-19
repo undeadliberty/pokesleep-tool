@@ -4,6 +4,7 @@ import { PokemonTypes } from '../../data/pokemons';
 import PokemonBox, { PokemonBoxItem } from '../../util/PokemonBox';
 import { StrengthParameter, loadStrengthParameter } from '../../util/PokemonStrength';
 import { isExpertField } from '../../data/fields';
+import i18n from '../../i18n';
 
 export type IvAction = {
     type: "add"|"export"|"exportClose"|"import"|"importClose"|
@@ -68,7 +69,7 @@ type IvStateCache = {
  */
 export function getInitialIvState(): IvState {
     const cache = loadInitialIvStateCache();
-    let iv = new PokemonIv("Venusaur");
+    let iv = new PokemonIv({ pokemonName: "Venusaur" });
     if (cache.iv !== "") {
         try {
             iv = PokemonIv.deserialize(cache.iv);
@@ -256,7 +257,19 @@ export function ivStateReducer(state: IvState, action: IvAction): IvState {
         return state;
     }
     if (type === "saveItem") {
-        const nickName = state.box.getById(state.selectedItemId)?.nickname;
+        const boxItem = state.box.getById(state.selectedItemId);
+
+        // Set nickname
+        let nickName = "";
+        if (boxItem !== null) {
+            nickName = boxItem.nickname;
+            const translatedName = i18n.t(`pokemons.${boxItem.iv.pokemon.name}`);
+            console.log(i18n.language, translatedName);
+            if (nickName === translatedName) {
+                nickName = "";
+            }
+        }
+
         const box = new PokemonBox(state.box.items);
         box.set(state.selectedItemId, state.pokemonIv, nickName);
         box.save();
@@ -330,7 +343,6 @@ export function ivStateReducer(state: IvState, action: IvAction): IvState {
 
 export function normalizeState(state: IvState): IvState {
     const selectedItem = state.box.getById(state.selectedItemId);
-    state.pokemonIv.normalize();
 
     // apply event fixedBerries type
     const event = getEventBonus(state.parameter.event,
