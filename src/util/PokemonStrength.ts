@@ -128,6 +128,12 @@ export interface StrengthParameter extends EnergyParameter {
         /** Custom team members (0 - 4) */
         members: BerryBurstTeamMember[];
     },
+    extraHelpfulTeam: {
+        /** Whether to calculate automatically using the default team */
+        auto: boolean,
+        /** Custom team members (0 - 4) */
+        members: number[];
+    },
 }
 
 /** Custom team member to calculate berry burst */
@@ -514,6 +520,10 @@ class PokemonStrength {
         if (mainSkill.startsWith("Dream Shard Magnet S")) {
             mainSkillBase *= bonus.dreamShard;
         }
+        if (mainSkill === "Helper Boost"){
+            const species = param.extraHelpfulTeam.auto ? 3 : param.helperBoostSpecies 
+            mainSkillBase = getSkillValue(mainSkill, skillLevel, species);
+        }
 
         let mainSkillFactor = 1;
         if (mainSkill === "Charge Energy S") {
@@ -521,7 +531,6 @@ class PokemonStrength {
         }
         const skillValuePerTrigger = mainSkillBase * mainSkillFactor;
         const skillValue = skillValuePerTrigger * skillCount;
-        const strengthPerHelp = 300 * (1 + param.fieldBonus / 100);
 
         const ingInRecipeStrengthRate = param.recipeBonus === 0 ? 1 :
             (1 + param.recipeBonus / 100) * (1 + recipeLevelBonus[param.recipeLevel] / 100);
@@ -567,23 +576,24 @@ class PokemonStrength {
                     skillValue2: 0, skillStrength2: 0, skillValuePerTrigger2: 0,
                 };
             }
-
-            case "Extra Helpful S":
+            case "Extra Helpful S": {
+                const ret = calculateHelperBoostStrength(this.iv, param, skillValue);
                 return {
                     skillValue,
-                    skillStrength: skillValue * strengthPerHelp,
+                    skillStrength: ret / 5,
                     skillValuePerTrigger,
                     skillValue2: 0, skillStrength2: 0, skillValuePerTrigger2: 0,
                 };
-
-            case "Helper Boost":
+            }
+            case "Helper Boost": {
+                const ret = calculateHelperBoostStrength(this.iv, param, skillValue);
                 return {
                     skillValue,
-                    skillStrength: skillValue * strengthPerHelp * 5,
+                    skillStrength: ret,
                     skillValuePerTrigger,
                     skillValue2: 0, skillStrength2: 0, skillValuePerTrigger2: 0,
                 };
-
+            }
             case "Berry Burst (Disguise)": {
                 const ret = calculateBerryBurstStrength(this.iv, param,
                     bonus.berryBurst, skillLevel);
@@ -956,6 +966,10 @@ export function createStrengthParameter(
                 { type: "psychic", level: 50 },
             ],
         },
+        extraHelpfulTeam:{
+            auto: true,
+            members: [300,300,300,300]
+        },
         customEventBonus: {
             target: {},
             effects: {
@@ -1097,6 +1111,16 @@ export function calculateBerryBurstStrength(iv: PokemonIv, param: StrengthParame
         ret.members.push({ total, perBerry, count });
     }
     return ret;
+}
+
+export function calculateHelperBoostStrength(iv: PokemonIv, param: StrengthParameter, skillValue: number):number{
+    if (param.extraHelpfulTeam.auto){
+        const strengthPerHelp = 300 * (1 + param.fieldBonus / 100);
+        return skillValue * strengthPerHelp * 5
+    }
+    const param_tmp = {...param, period:-1}
+    const result = new PokemonStrength(iv,param_tmp).calculate()
+    return skillValue *(param.extraHelpfulTeam.members.reduce((sum,item) => sum + item * (1 + param.fieldBonus / 100), result.totalStrength));
 }
 
 /**

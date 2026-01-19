@@ -16,8 +16,10 @@ import { getSkillRandomRange as getSkillRange, getMaxSkillLevel, getSkillValue,
 import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle,
     FormControl, MenuItem, Switch, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { LevelInput } from '../IvForm/LevelControl';
+import NumericInput from '../../common/NumericInput';
 import InfoButton from '../InfoButton';
 import IngredientIcon from '../IngredientIcon';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import TypeSelect from '../TypeSelect';
 import MainSkillIcon from '../MainSkillIcon';
 import SelectEx from '../../common/SelectEx';
@@ -204,7 +206,7 @@ const SkillHelpDialog = React.memo(({open, dispatch, onClose, strength, result}:
                         }}/>
                 </div>
             </Collapse>
-            {getBerryBurstConfigHtml(strength, dispatch, onBerryInfoClick, t)}
+            {getSkillConfigHtml(strength, dispatch, onBerryInfoClick, t)}
             {footnote !== "" && <div className="footnote">{footnote}</div>}
         </DialogContent>
         <DialogActions>
@@ -561,6 +563,17 @@ function getNormalSkillValueText(t: typeof i18next.t, valueText: string):
     return [t('value per skill', { value: valueText}), null];
 }
 
+function getSkillConfigHtml(strength: PokemonStrength,
+    dispatch: React.Dispatch<IvAction>,
+    onBerryInfoClick: (type: PokemonType, level: number) => void,
+    t: typeof i18next.t
+) {
+    return <>
+        {getBerryBurstConfigHtml(strength,dispatch,onBerryInfoClick,t)}
+        {getExtraHelpfulConfigHtml(strength,dispatch,t)}
+    </>;
+}
+
 function getBerryBurstConfigHtml(strength: PokemonStrength,
     dispatch: React.Dispatch<IvAction>,
     onBerryInfoClick: (type: PokemonType, level: number) => void,
@@ -661,6 +674,94 @@ function getBerryBurstConfigHtml(strength: PokemonStrength,
                     {maxSpecies > 2 && <MenuItem dense value="3">3</MenuItem>}
                     {maxSpecies > 3 && <MenuItem dense value="4">4</MenuItem>}
                     {maxSpecies > 4 && <MenuItem dense value="5">5</MenuItem>}
+                </SelectEx>}
+            </span>
+        </section>}
+    </>;
+}
+
+function getExtraHelpfulConfigHtml(strength: PokemonStrength,
+    dispatch: React.Dispatch<IvAction>,
+    t: typeof i18next.t
+) {
+    const settings = strength.parameter;
+
+    const showHelperConfig = strength.pokemonIv.pokemon.skill === "Extra Helpful S" ||
+        strength.pokemonIv.pokemon.skill === "Helper Boost";
+    
+    if (!showHelperConfig) {
+        return <></>;
+    }
+
+    const iv = strength.pokemonIv;
+    const auto = settings.extraHelpfulTeam.auto;
+    const members = settings.extraHelpfulTeam.members;
+    const species = settings.helperBoostSpecies;
+
+    const onExtraHelpfulAutoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch({type: "changeParameter", payload: {parameter: {
+            ...settings, extraHelpfulTeam: {
+                ...settings.extraHelpfulTeam,
+                auto: !e.target.checked,
+            },
+        }}});
+    };
+
+    const onExtraHelpfulmenberChange = (index: number, energy: number) => {
+        const members = [...settings.extraHelpfulTeam.members];
+        members[index] = energy / (1 + settings.fieldBonus / 100);
+
+        dispatch({type: "changeParameter", payload: {parameter: {
+            ...settings, extraHelpfulTeam: {
+                ...settings.extraHelpfulTeam,
+                members,
+            },
+        }}});
+    };
+    const onHelperBoostSpeciesChange = (value: string) => {
+        dispatch({type: "changeParameter", payload: {parameter: {
+            ...settings, helperBoostSpecies: parseInt(value, 10),
+        }}});
+    };
+
+    const param_tmp = {...settings, period:-10}
+    const ownStrength = round1(new PokemonStrength(iv,param_tmp).calculate().totalStrength)
+    const baseStrength = round1(3000 * (1 + settings.fieldBonus / 100))
+
+    return <>
+        <section style={{marginTop: '0.5rem'}}>
+            <label>{t('events.advanced')}:</label>
+            <Switch checked={!auto} size="small"
+                onChange={onExtraHelpfulAutoChange}/>
+        </section>
+        <section style={{paddingLeft: '1rem'}}>
+            <label>{t(`pokemons.${strength.pokemonIv.pokemon.name}`)}:</label>
+            <span style={{color: '#999'}}>
+                <LocalFireDepartmentIcon sx={{color: "#ff944b"}}/>
+                {auto ? baseStrength : ownStrength}{" /10cnt"}
+            </span>
+        </section>
+        {[0, 1, 2, 3].map(i => <section key={i} style={{paddingLeft: '1rem'}}>
+            <label>{t('other team member')} {i + 1}:</label>
+            <span style={{color: auto ? '#999' : 'inherit'}}>
+                <LocalFireDepartmentIcon sx={{color: "#ff944b"}}/>
+                {auto ? baseStrength : <NumericInput value={members[i] * 10 * (1 + settings.fieldBonus / 100)}
+                    sx={{width: '3.6rem', fontSize: '0.9rem'}} 
+                    onChange={energy => onExtraHelpfulmenberChange(i, energy / 10)}/>}{" /10cnt"}
+            </span>
+        </section>)}
+        {iv.pokemon.skill === "Helper Boost" && <section style={{paddingLeft: '1rem'}}>
+            <label>{t('different species')}:</label>
+            <span style={{color: '#999'}}>
+                {auto ? 3 :
+                <SelectEx value={species.toString()}
+                    sx={{padding: '0 0.5rem'}}
+                    onChange={onHelperBoostSpeciesChange}>
+                    <MenuItem dense value="1">1</MenuItem>
+                    <MenuItem dense value="2">2</MenuItem>
+                    <MenuItem dense value="3">3</MenuItem>
+                    <MenuItem dense value="4">4</MenuItem>
+                    <MenuItem dense value="5">5</MenuItem>
                 </SelectEx>}
             </span>
         </section>}
