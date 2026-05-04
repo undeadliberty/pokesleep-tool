@@ -1,95 +1,129 @@
-import React from 'react';
-import PokemonBox from '../../../util/PokemonBox';
+import {
+	Button,
+	Dialog,
+	DialogActions,
+	DialogContent,
+	DialogTitle,
+	Snackbar,
+	TextField,
+} from "@mui/material";
+import React from "react";
 import { readFileAsText } from '../../../util/File';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar,
-    TextField }  from '@mui/material';
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import type PokemonBox from "../../../util/PokemonBox";
 
-const BoxImportDialog = React.memo(({box, open, onClose}: {
-    box: PokemonBox,
-    open: boolean,
-    onClose: () => void,
-}) => {
-    const [value, setValue] = React.useState("");
-    const [importedMessage, setImportedMessage] = React.useState("");
-    const { t } = useTranslation();
+const BoxImportDialog = React.memo(
+	({
+		box,
+		open,
+		onClose,
+	}: {
+		box: PokemonBox;
+		open: boolean;
+		onClose: () => void;
+	}) => {
+		const [value, setValue] = React.useState("");
+		const [importedMessage, setImportedMessage] = React.useState("");
+		const { t } = useTranslation();
 
-
-    const onDrop = React.useCallback(async (e: React.DragEvent<HTMLDivElement>) => {
+		const onDrop = React.useCallback(
+			async (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         const file = e.dataTransfer.files[0];
         if (!file) return;
         setValue(await readFileAsText(file));
-    },[setValue]);
+    	},
+			[setValue]
+		);
 
-    const onFileChange = React.useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const onFileChange = React.useCallback(
+			async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
         setValue(await readFileAsText(file));
-    }, [setValue]);
+    	},
+			[setValue]
+		);
 
-    const onValueChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setValue(e.target.value);
-    }, [setValue]);
+		const onValueChange = React.useCallback(
+			(e: React.ChangeEvent<HTMLInputElement>) => {
+				setValue(e.target.value);
+			},
+			[],
+		);
 
-    const onClose_ = React.useCallback(() => {
-        setValue("");
-        onClose();
-    }, [setValue, onClose]);
+		const onClose_ = React.useCallback(() => {
+			setValue("");
+			onClose();
+		}, [onClose]);
 
-    const onImportClick = React.useCallback(() => {
-        const lines = value.split(/\n/g);
-        let added = 0;
-        for (const line of lines) {
-            if (!box.canAdd) {
-                break;
-            }
-            const data = box.deserializeItem(line);
-            if (data === null) {
-                continue;
-            }
-            box.add(data.iv, data.nickname);
-            added++;
-        }
+		const onImportClick = React.useCallback(() => {
+			const lines = value.split(/\n/g);
+			let added = 0;
+			for (const line of lines) {
+				if (!box.canAdd) {
+					break;
+				}
+				const data = box.deserializeItem(line);
+				if (data === null) {
+					continue;
+				}
+				box.add(data.iv, data.nickname);
+				added++;
+			}
 
-        if (added === 0) {
-            setImportedMessage(t('failed to import'));
-        }
-        else {
-            box.save();
-            setImportedMessage(t('imported N pokemon', {n: added}));
-            onClose_();
-        }
-    }, [box, setImportedMessage, t, onClose_, value]);
+			if (added === 0) {
+				setImportedMessage(t("failed to import"));
+			} else {
+				box.save();
+				setImportedMessage(t("imported N pokemon", { n: added }));
+				onClose_();
+			}
+		}, [box, t, onClose_, value]);
 
-    const onImportedMessageClose = React.useCallback(() => {
-        setImportedMessage("");
-    }, [setImportedMessage]);
+		const onImportedMessageClose = React.useCallback(() => {
+			setImportedMessage("");
+		}, []);
 
-    const importedMessageVisible = importedMessage !== "";
+		const importedMessageVisible = importedMessage !== "";
 
-    return <>
-        <Dialog open={open} onClose={onClose_}>
-            <DialogTitle>{t('import')}</DialogTitle>
-            <DialogContent>
-                <p style={{fontSize: '0.9rem', margin: '0 0 1rem 0'}}>
-                    {t('import message')}
-                    <input type="file" onChange={onFileChange}></input>
-                </p>
-                <TextField label={t('box data')}
-                    multiline fullWidth rows={6} value={value} onChange={onValueChange}
-                    onDragOver={e => e.preventDefault()} onDrop={onDrop}/>
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={onImportClick}>{t('import')}</Button>
-                <Button onClick={onClose_}>{t('close')}</Button>
-            </DialogActions>
-        </Dialog>
-        <Snackbar open={importedMessageVisible}
-            autoHideDuration={2000}
-            onClose={onImportedMessageClose}
-            message={importedMessage}/>
-    </>;
-});
+		return (
+			<>
+				<Dialog open={open} onClose={onClose_}>
+					<DialogTitle>{t("import")}</DialogTitle>
+					<DialogContent>
+						<p style={{ fontSize: "0.9rem", margin: "0 0 1rem 0" }}>
+							{t("import message")}
+							<input 
+								type="file"
+								onChange={onFileChange}
+							></input>
+						</p>
+						<TextField
+							label={t("box data")}
+							multiline
+							fullWidth
+							rows={6}
+							value={value}
+							onChange={onValueChange}
+							onDragOver={e => e.preventDefault()}
+							onDrop={onDrop}
+						/>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={onImportClick}>{t("import")}</Button>
+						<Button onClick={onClose_}>{t("close")}</Button>
+					</DialogActions>
+				</Dialog>
+				<Snackbar
+					open={importedMessageVisible}
+					autoHideDuration={2000}
+					onClose={onImportedMessageClose}
+					message={importedMessage}
+				/>
+			</>
+		);
+	},
+);
 
 export default BoxImportDialog;
