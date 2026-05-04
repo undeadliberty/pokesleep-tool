@@ -54,6 +54,8 @@ import {
 import type { IvAction } from "../IvState";
 import MainSkillIcon from "../MainSkillIcon";
 import TypeSelect from "../TypeSelect";
+import NumericInput from '../../common/NumericInput';
+import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import BerryStrengthDialog from "./BerryStrengthDialog";
 import SkillPityProcDialog from "./SkillPityProcDialog";
 import { StyledInfoDialog } from "./StrengthBerryIngSkillView";
